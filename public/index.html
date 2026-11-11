@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#111317" />
+  <title>דבר אלי</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- ========== CONNEXION ========== -->
+  <section id="auth" class="screen hidden">
+    <div class="auth-card">
+      <div class="logo">📻</div>
+      <h1 lang="he" dir="rtl">דבר אלי</h1>
+      <p class="muted">Parle avec tout le monde, sur 00:00 à 99:00</p>
+      <div class="seg">
+        <button data-auth="login" class="active">Connexion</button>
+        <button data-auth="register">Inscription</button>
+      </div>
+      <form id="auth-form">
+        <input id="auth-user" placeholder="Nom d'utilisateur" autocomplete="username" required />
+        <input id="auth-pass" type="password" placeholder="Mot de passe" autocomplete="current-password" required />
+        <button class="btn primary" type="submit" id="auth-submit">Se connecter</button>
+        <p id="auth-error" class="error"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========== APPLICATION ========== -->
+  <section id="app" class="screen hidden">
+    <header class="topbar">
+      <div class="me" id="me-chip"></div>
+      <div id="conn-status" class="conn"></div>
+    </header>
+
+    <main>
+      <!-- RADIO -->
+      <div class="view" id="view-radio">
+        <div class="device">
+          <div class="lcd" id="lcd">
+            <div class="lcd-top">
+              <span id="lcd-status">PRÊT</span>
+              <span id="lcd-lock"></span>
+              <span id="lcd-count"></span>
+            </div>
+            <div class="lcd-freq">
+              <div class="dial">
+                <button data-step="100">▲</button>
+                <span id="freq-a">00</span>
+                <button data-step="-100">▼</button>
+              </div>
+              <span class="colon">:</span>
+              <div class="dial">
+                <button data-step="1">▲</button>
+                <span id="freq-b">00</span>
+                <button data-step="-1">▼</button>
+              </div>
+            </div>
+            <div class="lcd-bottom" id="lcd-talker">&nbsp;</div>
+          </div>
+
+          <div class="controls">
+            <button class="btn" id="btn-type" title="Saisir une fréquence">⌨️</button>
+            <button class="btn primary" id="btn-join">Rejoindre</button>
+            <button class="btn" id="btn-lock" title="Fréquence privée (amis seulement)" disabled>🔓</button>
+          </div>
+
+          <button id="ptt" class="ptt" disabled>
+            <span class="ptt-icon">🎙️</span>
+            <span class="ptt-label">MAINTENIR POUR PARLER</span>
+          </button>
+          <p class="hint">Astuce : sur ordinateur, maintiens la touche <kbd>Espace</kbd></p>
+
+          <label class="volume">🔈 <input type="range" id="volume" min="0" max="1.5" step="0.05" value="1" /> 🔊</label>
+        </div>
+
+        <div class="card">
+          <h3>Sur la fréquence <span id="members-count" class="muted"></span></h3>
+          <ul id="members" class="list"><li class="muted">Rejoins une fréquence pour voir qui est là.</li></ul>
+        </div>
+
+        <div class="card">
+          <h3>Scanner <button class="link" id="btn-scan">↻ Actualiser</button></h3>
+          <ul id="scan" class="list"></ul>
+        </div>
+      </div>
+
+      <!-- AMIS -->
+      <div class="view hidden" id="view-friends">
+        <div class="card">
+          <h3>Ajouter un ami</h3>
+          <form id="add-friend" class="row">
+            <input id="add-friend-name" placeholder="Nom d'utilisateur (ex : marie_92)" required />
+            <button class="btn primary">Ajouter</button>
+          </form>
+        </div>
+        <div class="card" id="incoming-card">
+          <h3>Demandes reçues</h3>
+          <ul id="incoming" class="list"></ul>
+        </div>
+        <div class="card" id="outgoing-card">
+          <h3>Demandes envoyées</h3>
+          <ul id="outgoing" class="list"></ul>
+        </div>
+        <div class="card">
+          <h3>Mes amis</h3>
+          <ul id="friends" class="list"></ul>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="view hidden" id="view-messages">
+        <div id="conv-list" class="card">
+          <h3>Conversations</h3>
+          <ul id="convs" class="list"></ul>
+        </div>
+        <div id="chat" class="chat hidden">
+          <div class="chat-head">
+            <button class="link" id="chat-back">← Retour</button>
+            <div id="chat-title"></div>
+          </div>
+          <div id="chat-msgs" class="chat-msgs"></div>
+          <form id="chat-form" class="chat-form">
+            <input id="chat-input" placeholder="Écris un message…" autocomplete="off" />
+            <button class="btn primary">Envoyer</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- PROFIL -->
+      <div class="view hidden" id="view-profile">
+        <div class="card profile">
+          <div class="avatar big" id="profile-avatar"></div>
+          <p class="muted" id="profile-username"></p>
+          <form id="profile-form">
+            <label>Nom affiché
+              <input id="profile-name" maxlength="30" required />
+            </label>
+            <label>Bio
+              <textarea id="profile-bio" maxlength="160" rows="3" placeholder="Quelques mots sur toi…"></textarea>
+            </label>
+            <label>Couleur</label>
+            <div id="colors" class="colors"></div>
+            <button class="btn primary">Enregistrer</button>
+          </form>
+        </div>
+        <button class="btn danger wide" id="btn-logout">Se déconnecter</button>
+      </div>
+    </main>
+
+    <nav class="tabs">
+      <button data-view="radio" class="active">📻<span>Radio</span></button>
+      <button data-view="friends">👥<span>Amis</span><i class="badge hidden" id="badge-friends"></i></button>
+      <button data-view="messages">💬<span>Messages</span><i class="badge hidden" id="badge-messages"></i></button>
+      <button data-view="profile">👤<span>Profil</span></button>
+    </nav>
+  </section>
+
+  <div id="toasts"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

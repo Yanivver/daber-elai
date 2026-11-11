@@ -1,0 +1,16 @@
+{
+  "name": "talkie-walkie",
+  "version": "1.0.0",
+  "description": "Application de talkie-walkie avec fréquences, amis et messages",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "socket.io": "^4.8.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
